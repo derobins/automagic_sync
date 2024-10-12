@@ -37,15 +37,14 @@ jobs:
        OUTPUT=$(git rev-parse HEAD)
        echo "LAST_SHA=$OUTPUT" >> $GITHUB_ENV
 
-    - name: Check out the holding pen branch
+    - name: Check out the staging branch
       run: |
         git fetch --all
 
-        BRANCH_NAME="branch_1_holding_pen"
+        BRANCH_NAME="staged_commits"
 
         if git show-ref --quiet refs/remotes/origin/$BRANCH_NAME; then
           git checkout $BRANCH_NAME
-          echo "Branch '$BRANCH_NAME' already exists."
         else
           echo "Branch '$BRANCH_NAME' does not exist. Creating new branch."
           git checkout -b $BRANCH_NAME
@@ -54,6 +53,5 @@ jobs:
 
     - name: Cherry-pick this commit to the holding pen
       run: |
-        git cherry-pick --abort || true
         git cherry-pick $LAST_SHA || git cherry-pick --abort
         git push origin $BRANCH_NAME
