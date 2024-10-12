@@ -23,6 +23,8 @@ jobs:
 
     - name: Checkout repository
       uses: actions/checkout@v3
+      with:
+        ref: main
 
     - name: Set up Git
       run: |
@@ -43,6 +45,14 @@ jobs:
           git push origin $BRANCH_NAME
         fi
 
-        #    - name: Merge this commit to the holding pen
-        #      run: |
+    - name: Get the last commit SHA
+      id: last_commit
+      run: echo "::set-output name=sha::$(git rev-parse HEAD)"
 
+    - name: Check out the holding pen branch
+      run: git checkout $BRANCH_NAME
+
+    - name: Cherry-pick this commit to the holding pen
+      run: |
+        git cherry-pick ${{ steps.last_commit.outputs.sha }}
+        git push origin $BRANCH_NAME
