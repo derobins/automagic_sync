@@ -8,21 +8,14 @@ on:
       - closed
 
 jobs:
-  check:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Check if the merge label is present
-      #      run: echo "${{ toJSON(github.event.pull_request.labels.*.name) }}"
-      if: false == contains(github.event.pull_request.labels.*.name, 'Merge to Branch 1')
-      run: exit 1
+  merge_upstream:
 
-  merge:
-    needs: check
-    
-    if: needs.check.outputs.status == 'success'
+    if: contains(github.event.pull_request.labels.*.name, 'Merge to Branch 1')
+
     runs-on: ubuntu-latest
 
     steps:
+
     - name: Checkout repository
       uses: actions/checkout@v3
 
