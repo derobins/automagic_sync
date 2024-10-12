@@ -1,4 +1,4 @@
 int foo(void)
 {
-    return -10;
+    return -11;
 }
