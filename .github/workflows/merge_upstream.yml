@@ -31,13 +31,19 @@ jobs:
         git config user.name "GitHub Actions"
         git config user.email "actions@github.com"
 
-    - name: Create the holding pen branch if it doesn't exist
+    - name: Get the last commit SHA
+      run: |
+       OUTPUT=$(git rev-parse HEAD)
+       echo "LAST_SHA=$OUTPUT" >> $GITHUB_ENV
+
+    - name: Check out the holding pen branch
       run: |
         git fetch --all
 
         BRANCH_NAME="branch_1_holding_pen"
 
         if git show-ref --quiet refs/remotes/origin/$BRANCH_NAME; then
+          git checkout $BRANCH_NAME
           echo "Branch '$BRANCH_NAME' already exists."
         else
           echo "Branch '$BRANCH_NAME' does not exist. Creating new branch."
@@ -45,14 +51,7 @@ jobs:
           git push origin $BRANCH_NAME
         fi
 
-    - name: Get the last commit SHA
-      id: last_commit
-      run: echo "::set-output name=sha::$(git rev-parse HEAD)"
-
-    - name: Check out the holding pen branch
-      run: git checkout $BRANCH_NAME
-
     - name: Cherry-pick this commit to the holding pen
       run: |
-        git cherry-pick ${{ steps.last_commit.outputs.sha }}
+        git cherry-pick $LAST_SHA
         git push origin $BRANCH_NAME
