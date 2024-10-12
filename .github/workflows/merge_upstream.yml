@@ -10,8 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Check if the merge label is present
-      if: true == contains(github.event.pull_request.labels.*.name, 'Merge to Branch 1')
-      run: echo "Merging to branch 1"
       if: false == contains(github.event.pull_request.labels.*.name, 'Merge to Branch 1')
       run: exit 1
 
