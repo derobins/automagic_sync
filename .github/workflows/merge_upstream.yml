@@ -24,15 +24,16 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4.1.7
       with:
-        ref: main
+        fetch-depth: 0
 
     - name: Set up Git
       run: |
         git config user.name "GitHub Actions"
         git config user.email "actions@github.com"
 
-    - name: Get the last commit SHA
+    - name: Get the last commit SHA from the PR's branch
       run: |
+       git checkout ${{ github.event.pull_request.head.ref }}
        OUTPUT=$(git rev-parse HEAD)
        echo "LAST_SHA=$OUTPUT" >> $GITHUB_ENV
 
