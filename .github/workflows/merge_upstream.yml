@@ -10,9 +10,14 @@ on:
 jobs:
   merge_upstream:
 
-    if: contains(github.event.pull_request.labels.*.name, 'Merge to Branch 1')
+    if: |
+      contains(github.event.pull_request.labels.*.name, 'Merge to Branch 1') &&
+      github.event.pull_request.merged == true
 
     runs-on: ubuntu-latest
+
+    permissions:
+      constents: write
 
     steps:
 
