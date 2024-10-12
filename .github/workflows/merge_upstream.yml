@@ -53,5 +53,6 @@ jobs:
 
     - name: Cherry-pick this commit to the holding pen
       run: |
-        git cherry-pick $LAST_SHA
+        git cherry-pick --abort || true
+        git cherry-pick $LAST_SHA || git cherry-pick --abort
         git push origin $BRANCH_NAME
